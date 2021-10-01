@@ -17,7 +17,7 @@ public class ProductService {
         productRepository.save(new Product(key, value));
     }
 
-    public Object get(String key) {
+    public String get(String key) {
         return productRepository.getById(key).getValue();
     }
 
