@@ -29,7 +29,7 @@ public class ProductService {
             e.printStackTrace();
         }
     }
-//'"+ key +"','"+ value +"'
+
     public void put(String key, Object value) {
         String query = "INSERT INTO products (`id`, `value`) VALUES (?,?)";
 
@@ -52,7 +52,6 @@ public class ProductService {
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             Object object = rs.getObject(1);
-            String className = object.getClass().getName();
 
             rs.close();
             pstmt.close();
@@ -63,18 +62,6 @@ public class ProductService {
         }
 
         return null;
-//       String query = "SELECT value FROM products WHERE products.id = '" + key + "';";
-//
-//        try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
-//            PreparedStatement stmt = conn.prepareStatement(query);
-//            ResultSet resultSet = stmt.executeQuery();
-//            while (resultSet.next()) {
-//                return resultSet.getString("value").toString();
-//            }
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//        return "No such key in DB!";
     }
 
     public boolean contains(String key) {

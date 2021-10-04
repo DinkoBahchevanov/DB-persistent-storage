@@ -1,8 +1,5 @@
 package com.example.persistancestorage.models;
 
-import javax.persistence.*;
-
-//@Entity
 public class Product {
 
     private String id;
