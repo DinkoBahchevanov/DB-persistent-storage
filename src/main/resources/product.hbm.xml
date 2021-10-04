@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.example.persistancestorage.models.Product" table="products">
+        <meta attribute="class-description">
+            This class contains the product details
+        </meta>
+        <id name="id" column="id" type="java.lang.String"></id>
+        <property name="value" column="value" type="java.lang.String"></property>
+    </class>
+</hibernate-mapping>

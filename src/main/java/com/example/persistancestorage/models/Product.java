@@ -1,13 +1,8 @@
 package com.example.persistancestorage.models;
 
-import javax.persistence.*;
-
-@Entity
 public class Product {
 
-    @Id
     private String id;
-    @Column
     private String value;
 
     public Product(String key, String value) {
@@ -26,7 +21,7 @@ public class Product {
         this.id = id;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
