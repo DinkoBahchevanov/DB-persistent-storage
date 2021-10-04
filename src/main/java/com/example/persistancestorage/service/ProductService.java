@@ -19,7 +19,7 @@ public class ProductService {
             String dropTable = "DROP TABLE IF EXISTS products;";
             String sql = "CREATE TABLE IF NOT EXISTS products " +
                     "(id VARCHAR(255) not NULL, " +
-                    "value VARCHAR(255) NOT NULL," +
+                    "value OTHER NOT NULL," +
                     " PRIMARY KEY ( id ))";
 
             stmt.executeUpdate(dropTable);
@@ -29,12 +29,14 @@ public class ProductService {
             e.printStackTrace();
         }
     }
-
-    public void put(String key, String value) {
-        String query = "INSERT INTO products (`id`, `value`) VALUES ('"+ key +"','"+ value +"')";
+//'"+ key +"','"+ value +"'
+    public void put(String key, Object value) {
+        String query = "INSERT INTO products (`id`, `value`) VALUES (?,?)";
 
         try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setObject(1, key);
+            stmt.setObject(2, value, Types.OTHER);
             stmt.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -42,18 +44,37 @@ public class ProductService {
     }
 
     public String get(String key) {
-       String query = "SELECT value FROM products WHERE products.id = '" + key + "';";
+        String query = "SELECT value FROM products WHERE products.id = ?";
 
         try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet resultSet = stmt.executeQuery();
-            while (resultSet.next()) {
-                return resultSet.getString("value");
-            }
-        } catch (SQLException throwables) {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, key);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Object object = rs.getObject(1);
+            String className = object.getClass().getName();
+
+            rs.close();
+            pstmt.close();
+            return object.toString();
+        }
+        catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return "No such key in DB!";
+
+        return null;
+//       String query = "SELECT value FROM products WHERE products.id = '" + key + "';";
+//
+//        try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
+//            PreparedStatement stmt = conn.prepareStatement(query);
+//            ResultSet resultSet = stmt.executeQuery();
+//            while (resultSet.next()) {
+//                return resultSet.getString("value").toString();
+//            }
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//        return "No such key in DB!";
     }
 
     public boolean contains(String key) {
