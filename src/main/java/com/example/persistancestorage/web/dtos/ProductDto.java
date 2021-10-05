@@ -1,16 +1,16 @@
-package com.example.persistancestorage.models;
+package com.example.persistancestorage.web.dtos;
 
-public class Product {
+public class ProductDto {
 
     private String id;
     private Object value;
 
-    public Product(String key, Object value) {
-        this.id = key;
+    public ProductDto(String id, Object value) {
+        this.id = id;
         this.value = value;
     }
 
-    public Product() {
+    public ProductDto() {
     }
 
     public String getId() {
