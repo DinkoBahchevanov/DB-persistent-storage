@@ -2,23 +2,23 @@ package com.example.persistancestorage.web.dtos;
 
 public class ProductDto {
 
-    private String id;
+    private String key;
     private Object value;
 
-    public ProductDto(String id, Object value) {
-        this.id = id;
+    public ProductDto(String key, Object value) {
+        this.key = key;
         this.value = value;
     }
 
     public ProductDto() {
     }
 
-    public String getId() {
-        return id;
+    public String getKey() {
+        return key;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public Object getValue() {

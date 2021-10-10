@@ -1,7 +1,7 @@
 package com.example.persistancestorage.service;
 
 import com.example.persistancestorage.exceptions.ProductNotFoundException;
-import com.example.persistancestorage.models.Product;
+import com.example.persistancestorage.models.Pair;
 import com.example.persistancestorage.web.dtos.ProductDto;
 import com.example.persistancestorage.web.dtos.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +28,15 @@ public class ProductServiceImpl implements ProductService {
         ) {
             String dropTable = "DROP TABLE IF EXISTS products;";
             String sql = "CREATE TABLE IF NOT EXISTS products " +
-                    "(id VARCHAR(255) not NULL, " +
+                    "(key VARCHAR(255) not NULL, " +
                     "value OTHER NOT NULL," +
-                    " PRIMARY KEY ( id ))";
+                    " PRIMARY KEY ( key ))";
 
             stmt.executeUpdate(dropTable);
             stmt.executeUpdate(sql);
             System.out.println("Created table in given database...");
 
-            String query = "INSERT INTO products (`id`, `value`) VALUES (?,?)";
+            String query = "INSERT INTO products (`key`, `value`) VALUES (?,?)";
 
             PreparedStatement baba = conn.prepareStatement(query);
             baba.setObject(1, "Baba");
@@ -48,17 +48,22 @@ public class ProductServiceImpl implements ProductService {
             kumcho.setObject(2, 3, Types.OTHER);
             kumcho.executeUpdate();
 
+            PreparedStatement qga = conn.prepareStatement(query);
+            qga.setObject(1, "Qga");
+            qga.setObject(2, new int[]{1,2}, Types.OTHER);
+            qga.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public ProductDto put(ProductDto productDto) {
-        String query = "INSERT INTO products (`id`, `value`) VALUES (?,?)";
+        String query = "INSERT INTO products (`key`, `value`) VALUES (?,?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setObject(1, productDto.getId());
+            stmt.setObject(1, productDto.getKey());
             stmt.setObject(2, productDto.getValue(), Types.OTHER);
             stmt.executeUpdate();
             return productDto;
@@ -69,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductDto get(String key) {
-        String query = "SELECT * FROM products WHERE products.id = ?";
+        String query = "SELECT * FROM products WHERE products.key = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement pstmt = conn.prepareStatement(query);
@@ -79,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
 
             Object object = rs.getObject(2);
             String id = rs.getString(1);
-            Product product = new Product(id, object);
+            Pair product = new Pair(id, object);
 
             rs.close();
             pstmt.close();
@@ -101,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
             while (rs.next()) {
                 Object object = rs.getObject(2);
                 String id = rs.getString(1);
-                Product product = new Product(id, object);
+                Pair product = new Pair(id, object);
                 productGetDtos.add(productMapper.productToProductGetDto(product));
             }
 
@@ -136,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
 //    }
 
     public boolean contains(String key) {
-        String query = "SELECT * FROM products where id = '" + key + "';";
+        String query = "SELECT * FROM products where key = '" + key + "';";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -150,7 +155,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public boolean remove(String key) {
-        String query = "DELETE FROM products WHERE id = '" + key + "';";
+        String query = "DELETE FROM products WHERE key = '" + key + "';";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement stmt = conn.prepareStatement(query);
